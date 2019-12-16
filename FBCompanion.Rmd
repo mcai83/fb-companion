@@ -1,0 +1,40 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+#RShiny App
+
+shinyApp(
+  ui <- fluidPage(
+    title="Fantasy Basketball Companion",
+    sidebarLayout(
+      sidebarPanel(uiOutput("var1_select")),
+      mainPanel(tableOutput("reportOutput"))
+    )
+  ),
+  
+  server <- function(input, output) {
+    
+    output$var1_select <- renderUI({
+      selectInput(
+        "ind_var_select",
+        "Select Names", 
+        choices = sort(as.character(test1$Name)),
+        # choices = as.character(nba [,1]),
+        multiple = TRUE,
+        #selected = nba[1,1]
+        selected = test1[1,2]
+      )
+    })
+    
+    output$reportOutput = renderTable({
+      # Filter it
+      subset(test1, Name %in% input$ind_var_select)
+    }, options = list(scrollX = TRUE))
+    
+  }
+)
+
+```
